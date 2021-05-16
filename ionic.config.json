@@ -1,0 +1,7 @@
+{
+  "name": "marketplace",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
