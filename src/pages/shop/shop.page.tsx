@@ -2,6 +2,7 @@ import React from 'react';
 import { IonContent, IonPage } from "@ionic/react";
 import './shop.styles.scss';
 
+import Header from "../../components/header/header.component";
 import CollectionPreview from '../../components/collection-preview/collection-preview.component'
 import { Collections } from '../../entities/shop/collections';
 import SHOP_DATA from './shop.data';
@@ -23,6 +24,7 @@ class ShopPage extends React.Component<MyProps, MyState> {
     return (
       <IonPage>
         <IonContent fullscreen>
+          <Header/>
           <div className='shop-page'>
             <h1>Shop Page</h1>
             {

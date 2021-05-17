@@ -1,12 +1,16 @@
 import { IonContent, IonPage } from '@ionic/react';
 import './home.page.scss';
 
+import Header from "../../components/header/header.component";
+
+
 import Directory from '../../components/directory/directory.component';
 
 const HomePage: React.FC = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
+        <Header/>
         <section className='homepage'>
           <Directory></Directory>
         </section>
