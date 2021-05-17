@@ -3,9 +3,10 @@ import "./directory.styles.scss";
 
 // COMPONENTS
 import MenuItem from "../menu-item/menu-item.component";
+import { Sections } from '../../entities/home/sections'
 
 type MyProps = {};
-type MyState = { sections: any[] };
+type MyState = { sections: Sections[] };
 
 class Directory extends React.Component<MyProps, MyState> {
   constructor(props: any) {
@@ -52,8 +53,8 @@ class Directory extends React.Component<MyProps, MyState> {
   render() {
     return (
       <div className="directory-menu">
-        {this.state.sections.map(({ title, imageUrl, id, size }) => (
-          <MenuItem key={id} title={title} imageUrl={imageUrl} size={size}></MenuItem>
+        {this.state.sections.map(({ id, ...sectionProps }) => (
+          <MenuItem key={id} {...sectionProps}></MenuItem>
         ))}
       </div>
     );
