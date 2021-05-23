@@ -1,50 +1,95 @@
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import HomePage from './pages/home-page/home.page';
-import ShopPage from './pages/shop/shop.page';
-import SignInPage from './pages/sign-in/sign-in.page';
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { IonApp, IonRouterOutlet } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+
+import HomePage from "./pages/home-page/home.page";
+import ShopPage from "./pages/shop/shop.page";
+import SignInPage from "./pages/sign-in/sign-in.page";
+
+import { auth } from "./firebase/firebase.utils";
 
 /* Core CSS required for Ionic components to work properly */
-import '@ionic/react/css/core.css';
+import "@ionic/react/css/core.css";
 
 /* Basic CSS for apps built with Ionic */
-import '@ionic/react/css/normalize.css';
-import '@ionic/react/css/structure.css';
-import '@ionic/react/css/typography.css';
+import "@ionic/react/css/normalize.css";
+import "@ionic/react/css/structure.css";
+import "@ionic/react/css/typography.css";
 
 /* Optional CSS utils that can be commented out */
-import '@ionic/react/css/padding.css';
-import '@ionic/react/css/float-elements.css';
-import '@ionic/react/css/text-alignment.css';
-import '@ionic/react/css/text-transformation.css';
-import '@ionic/react/css/flex-utils.css';
-import '@ionic/react/css/display.css';
+import "@ionic/react/css/padding.css";
+import "@ionic/react/css/float-elements.css";
+import "@ionic/react/css/text-alignment.css";
+import "@ionic/react/css/text-transformation.css";
+import "@ionic/react/css/flex-utils.css";
+import "@ionic/react/css/display.css";
 
 /* Theme variables */
-import './theme/variables.scss';
+import "./theme/variables.scss";
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Switch>
-          <Route exact path="/home">
-            <HomePage />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-          <Route exact path="/shop">
-            <ShopPage />
-          </Route>
-          <Route exact path="/sign-in">
-            <SignInPage />
-          </Route>
-        </Switch>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+type MyProps = {};
+type MyState = {
+  currentUser: any,
+};
+
+class App extends React.Component<MyProps, MyState> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      currentUser: null,
+    };
+  }
+
+  unsubscribeFromAuth: any = null;
+
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
+      this.setState({ currentUser: user });
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
+  render() {
+    return (
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Switch>
+              <Route
+                exact
+                path="/home"
+                render={(props) => (
+                  <HomePage currentUser={this.state.currentUser} />
+                )}
+              ></Route>
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
+              <Route
+                exact
+                path="/shop"
+                render={(props) => (
+                  <ShopPage currentUser={this.state.currentUser} />
+                )}
+              ></Route>
+              <Route
+                exact
+                path="/sign-in"
+                render={(props) => (
+                  <SignInPage currentUser={this.state.currentUser} />
+                )}
+              ></Route>
+            </Switch>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    );
+  }
+}
 
 export default App;
