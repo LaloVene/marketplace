@@ -28,11 +28,6 @@ const Header: React.FC<any> = ({currentUser}) => {
             Sign In
           </Link>
         )}
-        {currentUser ?
-        (<IonAvatar className="picture">
-          <img src={currentUser?.photoURL} alt="" />
-        </IonAvatar>) : null
-        }
       </div>
     </div>
   );

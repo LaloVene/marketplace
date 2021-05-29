@@ -7,7 +7,7 @@ import HomePage from "./pages/home-page/home.page";
 import ShopPage from "./pages/shop/shop.page";
 import SignInPage from "./pages/sign-in/sign-in.page";
 
-import { auth } from "./firebase/firebase.utils";
+import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -45,8 +45,27 @@ class App extends React.Component<MyProps, MyState> {
   unsubscribeFromAuth: any = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged((user) => {
-      this.setState({ currentUser: user });
+    // Check if aith changed
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth: any) => {
+      if (userAuth) {
+        // Check user
+        const userRef = await createUserProfileDocument(userAuth);
+
+        // Save data
+        userRef?.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data(),
+            }
+          });
+          console.log(this.state);
+          
+        })
+      } else {
+        // If error display normal data
+        this.setState({currentUser: userAuth});
+      }
     });
   }
 
