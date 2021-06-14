@@ -10,7 +10,7 @@ const HomePage: React.FC<any> = ({currentUser}) => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <Header currentUser={currentUser} />
+        <Header />
         <section className="homepage">
           <Directory></Directory>
         </section>

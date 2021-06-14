@@ -7,9 +7,7 @@ import CollectionPreview from '../../components/collection-preview/collection-pr
 import { Collections } from '../../entities/shop/collections';
 import SHOP_DATA from './shop.data';
 
-type MyProps = {
-  currentUser: any
-};
+type MyProps = {};
 type MyState = { collections: Collections[] };
 
 class ShopPage extends React.Component<MyProps, MyState> {
@@ -26,7 +24,7 @@ class ShopPage extends React.Component<MyProps, MyState> {
     return (
       <IonPage>
         <IonContent fullscreen>
-          <Header currentUser={this.props.currentUser} />
+          <Header/>
           <div className="shop-page">
             <h1>Shop Page</h1>
             {collections.map(({ id, ...collectionProps }) => (

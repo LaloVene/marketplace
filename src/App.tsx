@@ -7,6 +7,10 @@ import HomePage from "./pages/home-page/home.page";
 import ShopPage from "./pages/shop/shop.page";
 import SignInPage from "./pages/sign-in/sign-in.page";
 
+import { connect } from "react-redux";
+import { State } from "./entities/redux/state";
+import { setCurrentUser } from './redux/user/user.actions';
+
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
 /* Core CSS required for Ionic components to work properly */
@@ -28,23 +32,26 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.scss";
 
-type MyProps = {};
+type MyProps = any;
 type MyState = {
   currentUser: any,
 };
 
 class App extends React.Component<MyProps, MyState> {
-  constructor(props: any) {
-    super(props);
+  // constructor(props: any) {
+  //   super(props);
 
-    this.state = {
-      currentUser: null,
-    };
-  }
+  //   this.state = {
+  //     currentUser: null,
+  //   };
+  // }
 
   unsubscribeFromAuth: any = null;
 
   componentDidMount() {
+
+    const {setCurrentUser} = this.props;
+
     // Check if aith changed
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth: any) => {
       if (userAuth) {
@@ -53,18 +60,22 @@ class App extends React.Component<MyProps, MyState> {
 
         // Save data
         userRef?.onSnapshot(snapShot => {
-          this.setState({
+          // this.setState({
+          //   currentUser: {
+          //     id: snapShot.id,
+          //     ...snapShot.data(),
+          //   }
+          // });
+          setCurrentUser({
             currentUser: {
               id: snapShot.id,
               ...snapShot.data(),
-            }
-          });
-          console.log(this.state);
-          
+            },
+          });          
         })
       } else {
         // If error display normal data
-        this.setState({currentUser: userAuth});
+        setCurrentUser(userAuth);
       }
     });
   }
@@ -83,7 +94,7 @@ class App extends React.Component<MyProps, MyState> {
                 exact
                 path="/home"
                 render={(props) => (
-                  <HomePage currentUser={this.state.currentUser} />
+                  <HomePage/>
                 )}
               ></Route>
               <Route exact path="/">
@@ -93,14 +104,14 @@ class App extends React.Component<MyProps, MyState> {
                 exact
                 path="/shop"
                 render={(props) => (
-                  <ShopPage currentUser={this.state.currentUser} />
+                  <ShopPage/>
                 )}
               ></Route>
               <Route
                 exact
                 path="/sign-in"
                 render={(props) => (
-                  <SignInPage currentUser={this.state.currentUser} />
+                  <SignInPage/>
                 )}
               ></Route>
             </Switch>
@@ -111,4 +122,8 @@ class App extends React.Component<MyProps, MyState> {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch: any) => ({
+  setCurrentUser: (user: any) => dispatch(setCurrentUser(user)),
+})
+
+export default connect(null, mapDispatchToProps)(App);

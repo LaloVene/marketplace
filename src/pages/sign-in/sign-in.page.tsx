@@ -6,10 +6,10 @@ import Header from '../../components/header/header.component';
 import SignIn from '../../components/sign-in/sign-in.component';
 import SignUp from '../../components/sign-up/sign-up.component';
 
-const SignInPage: React.FC<any> = ( {currentUser} ) => (
+const SignInPage: React.FC<any> = () => (
   <IonPage>
     <IonContent fullscreen>
-      <Header currentUser={currentUser} />
+      <Header/>
       <div className="sign-in-and-sign-up">
         <SignIn/>
         <SignUp/>

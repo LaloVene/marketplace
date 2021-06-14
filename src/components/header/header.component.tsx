@@ -1,6 +1,7 @@
 import React from "react";
-import { IonAvatar } from "@ionic/react";
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
+import { State } from '../../entities/redux/state'
 import "./header.styles.scss";
 
 import { auth } from '../../firebase/firebase.utils';
@@ -32,4 +33,9 @@ const Header: React.FC<any> = ({currentUser}) => {
     </div>
   );
 };
-export default Header;
+
+const mapStateToProps = (state: State) => ({
+  currentUser: state.user.currentUser,
+});
+
+export default connect(mapStateToProps)(Header);
