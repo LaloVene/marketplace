@@ -8,7 +8,6 @@ import ShopPage from "./pages/shop/shop.page";
 import SignInPage from "./pages/sign-in/sign-in.page";
 
 import { connect } from "react-redux";
-import { State } from "./entities/redux/state";
 import { setCurrentUser } from './redux/user/user.actions';
 
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
@@ -110,10 +109,14 @@ class App extends React.Component<MyProps, MyState> {
               <Route
                 exact
                 path="/sign-in"
-                render={(props) => (
-                  <SignInPage/>
-                )}
-              ></Route>
+                render={() => 
+                  this.props.currentUser ? (
+                    <Redirect to='/'/>
+                  ) : (
+                    <SignInPage/>
+                  )
+                }
+              />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -122,8 +125,12 @@ class App extends React.Component<MyProps, MyState> {
   }
 }
 
+const mapStateToProps = ({ user }: any) => ({
+  currentUser: user.currentUser,
+});
+
 const mapDispatchToProps = (dispatch: any) => ({
   setCurrentUser: (user: any) => dispatch(setCurrentUser(user)),
-})
+});
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
