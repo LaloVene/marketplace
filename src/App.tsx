@@ -8,7 +8,9 @@ import ShopPage from "./pages/shop/shop.page";
 import SignInPage from "./pages/sign-in/sign-in.page";
 
 import { connect } from "react-redux";
-import { setCurrentUser } from './redux/user/user.actions';
+import { createStructuredSelector } from "reselect";
+import { setCurrentUser } from "./redux/user/user.actions";
+import { selectCurrentUser } from "./redux/user/user.selector";
 
 import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
 
@@ -33,7 +35,7 @@ import "./theme/variables.scss";
 
 type MyProps = any;
 type MyState = {
-  currentUser: any,
+  currentUser: any;
 };
 
 class App extends React.Component<MyProps, MyState> {
@@ -48,35 +50,36 @@ class App extends React.Component<MyProps, MyState> {
   unsubscribeFromAuth: any = null;
 
   componentDidMount() {
-
-    const {setCurrentUser} = this.props;
+    const { setCurrentUser } = this.props;
 
     // Check if aith changed
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth: any) => {
-      if (userAuth) {
-        // Check user
-        const userRef = await createUserProfileDocument(userAuth);
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(
+      async (userAuth: any) => {
+        if (userAuth) {
+          // Check user
+          const userRef = await createUserProfileDocument(userAuth);
 
-        // Save data
-        userRef?.onSnapshot(snapShot => {
-          // this.setState({
-          //   currentUser: {
-          //     id: snapShot.id,
-          //     ...snapShot.data(),
-          //   }
-          // });
-          setCurrentUser({
-            currentUser: {
-              id: snapShot.id,
-              ...snapShot.data(),
-            },
-          });          
-        })
-      } else {
-        // If error display normal data
-        setCurrentUser(userAuth);
+          // Save data
+          userRef?.onSnapshot((snapShot) => {
+            // this.setState({
+            //   currentUser: {
+            //     id: snapShot.id,
+            //     ...snapShot.data(),
+            //   }
+            // });
+            setCurrentUser({
+              currentUser: {
+                id: snapShot.id,
+                ...snapShot.data(),
+              },
+            });
+          });
+        } else {
+          // If error display normal data
+          setCurrentUser(userAuth);
+        }
       }
-    });
+    );
   }
 
   componentWillUnmount() {
@@ -92,9 +95,7 @@ class App extends React.Component<MyProps, MyState> {
               <Route
                 exact
                 path="/home"
-                render={(props) => (
-                  <HomePage/>
-                )}
+                render={(props) => <HomePage />}
               ></Route>
               <Route exact path="/">
                 <Redirect to="/home" />
@@ -102,19 +103,13 @@ class App extends React.Component<MyProps, MyState> {
               <Route
                 exact
                 path="/shop"
-                render={(props) => (
-                  <ShopPage/>
-                )}
+                render={(props) => <ShopPage />}
               ></Route>
               <Route
                 exact
                 path="/sign-in"
-                render={() => 
-                  this.props.currentUser ? (
-                    <Redirect to='/'/>
-                  ) : (
-                    <SignInPage/>
-                  )
+                render={() =>
+                  this.props.currentUser ? <Redirect to="/" /> : <SignInPage />
                 }
               />
             </Switch>
@@ -125,8 +120,8 @@ class App extends React.Component<MyProps, MyState> {
   }
 }
 
-const mapStateToProps = ({ user }: any) => ({
-  currentUser: user.currentUser,
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

@@ -3,6 +3,7 @@ export interface State {
     currentUser: any;
   };
   cart: {
+    hidden: boolean;
     cartItems: [
       {
         id: number;
