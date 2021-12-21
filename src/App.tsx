@@ -6,6 +6,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import HomePage from "./pages/home-page/home.page";
 import ShopPage from "./pages/shop/shop.page";
 import SignInPage from "./pages/sign-in/sign-in.page";
+import CheckoutPage from "./pages/checkout/checkout.component";
 
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -104,6 +105,11 @@ class App extends React.Component<MyProps, MyState> {
                 exact
                 path="/shop"
                 render={(props) => <ShopPage />}
+              ></Route>
+              <Route
+                exact
+                path="/checkout"
+                render={(props) => <CheckoutPage />}
               ></Route>
               <Route
                 exact
