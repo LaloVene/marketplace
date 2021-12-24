@@ -1,19 +1,17 @@
-import { IonContent, IonPage } from '@ionic/react';
-import './home.page.scss';
+import { IonContent, IonPage } from "@ionic/react";
 
 import Header from "../../components/header/header.component";
+import Directory from "../../components/directory/directory.component";
+import { HomePageContainer } from "./home.styles";
 
-
-import Directory from '../../components/directory/directory.component';
-
-const HomePage: React.FC<any> = ({currentUser}) => {
+const HomePage: React.FC<any> = ({ currentUser }) => {
   return (
     <IonPage>
       <IonContent fullscreen>
         <Header />
-        <section className="homepage">
+        <HomePageContainer>
           <Directory></Directory>
-        </section>
+        </HomePageContainer>
       </IonContent>
     </IonPage>
   );
