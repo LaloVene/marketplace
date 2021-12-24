@@ -93,24 +93,12 @@ class App extends React.Component<MyProps, MyState> {
         <IonReactRouter>
           <IonRouterOutlet>
             <Switch>
-              <Route
-                exact
-                path="/home"
-                render={(props) => <HomePage />}
-              ></Route>
+              <Route exact path="/home" component={HomePage}></Route>
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
-              <Route
-                exact
-                path="/shop"
-                render={(props) => <ShopPage />}
-              ></Route>
-              <Route
-                exact
-                path="/checkout"
-                render={(props) => <CheckoutPage />}
-              ></Route>
+              <Route path="/shop" component={ShopPage}></Route>
+              <Route exact path="/checkout" component={CheckoutPage}></Route>
               <Route
                 exact
                 path="/sign-in"
