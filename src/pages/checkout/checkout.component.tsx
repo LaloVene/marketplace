@@ -1,4 +1,4 @@
-import { IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonPage, IonChip } from "@ionic/react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import {
@@ -9,6 +9,7 @@ import {
 import Header from "../../components/header/header.component";
 import CheckoutItem from "../../components/checkout-item/checkout-item.component";
 import "./checkout.styles.scss";
+import StripeCheckoutButton from "../../components/stripe-button/stripe-button.component";
 
 const CheckoutPage = ({ cartItems, total }: any) => {
   return (
@@ -39,6 +40,11 @@ const CheckoutPage = ({ cartItems, total }: any) => {
           <div className="total">
             <span>TOTAL: ${total}</span>
           </div>
+          Please use the following test credit card for payments
+          <IonChip color="tertiary" className="test-warning">
+            4242 4242 4242 4242 - Exp: 01/25 - CVV: 123
+          </IonChip>
+          <StripeCheckoutButton price={total} />
         </div>
       </IonContent>
     </IonPage>
