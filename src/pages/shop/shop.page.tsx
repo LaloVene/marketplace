@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Route } from "react-router-dom";
 import "./shop.styles.scss";
 import { connect } from "react-redux";
-import { updateCollections } from "../../redux/shop/shop.actions";
+import { createStructuredSelector } from "reselect";
+import { fetchCollectionStartAsync } from "../../redux/shop/shop.actions";
+import {
+  selectIsCollectionFetching,
+  selectIsCollectionsLoaded,
+} from "../../redux/shop/shop.selectors";
 
 import { IonContent, IonPage } from "@ionic/react";
 import Header from "../../components/header/header.component";
@@ -10,58 +15,54 @@ import CollectionsOverview from "../../components/collections-overview/collectio
 import CollectionPage from "../collection/collection.page";
 import { IonLoading } from "@ionic/react";
 
-import {
-  firestore,
-  convertCollectionsSnapshotToMap,
-} from "../../firebase/firebase.utils";
-
-const ShopPage = ({ match, updateCollections }: any) => {
-  const [isLoading, setIsLoading] = useState(true);
-  let unsubscribeFromSnapshot: any = null;
-
+const ShopPage = ({
+  match,
+  isCollectionFetching,
+  isCollectionsLoaded,
+  fetchCollectionStartAsync,
+}: any) => {
   useEffect(() => {
-    const collectionRef = firestore.collection("collections");
-    collectionRef.onSnapshot(async (snapshot) => {
-      const collectionMap = convertCollectionsSnapshotToMap(snapshot);
-      updateCollections(collectionMap);
-      setIsLoading(false);
-    });
-
-    return () => {
-      // console.log("unsubscribe");
-    };
+    fetchCollectionStartAsync();
   }, []);
 
   return (
     <IonPage>
       <IonContent fullscreen>
         <Header />
-        {!isLoading ? (
-          <div className="shop-page">
-            <h1>Shop Page</h1>
+        <div className="shop-page">
+          <h1>Shop Page</h1>
+          {!isCollectionFetching ? (
             <Route
               exact
               path={`${match.path}`}
               component={CollectionsOverview}
             />
+          ) : (
+            <IonLoading isOpen={true} mode="ios" />
+          )}
+          {isCollectionsLoaded ? (
             <Route
               exact
               path={`${match.path}/:collectionId`}
               component={CollectionPage}
             />
-          </div>
-        ) : (
-          <IonLoading isOpen={true} mode="ios" />
-        )}
+          ) : (
+            <IonLoading isOpen={true} mode="ios" />
+          )}
+        </div>
       </IonContent>
     </IonPage>
   );
 };
 
+const mapStateToProps = createStructuredSelector({
+  isCollectionFetching: selectIsCollectionFetching,
+  isCollectionsLoaded: selectIsCollectionsLoaded,
+});
 const mapDispatchToProps = (dispatch: any) => ({
-  updateCollections: (collectionsMap: any) => {
-    dispatch(updateCollections(collectionsMap));
+  fetchCollectionStartAsync: () => {
+    dispatch(fetchCollectionStartAsync());
   },
 });
 
-export default connect(null, mapDispatchToProps)(ShopPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
