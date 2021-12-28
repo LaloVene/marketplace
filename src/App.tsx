@@ -12,8 +12,13 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { setCurrentUser } from "./redux/user/user.actions";
 import { selectCurrentUser } from "./redux/user/user.selector";
+import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments,
+} from "./firebase/firebase.utils";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -51,7 +56,7 @@ class App extends React.Component<MyProps, MyState> {
   unsubscribeFromAuth: any = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collections } = this.props;
 
     // Check if aith changed
     this.unsubscribeFromAuth = auth.onAuthStateChanged(
@@ -81,6 +86,11 @@ class App extends React.Component<MyProps, MyState> {
         }
       }
     );
+    // Fill collections data
+    // addCollectionAndDocuments(
+    //   "collections",
+    //   collections.map(({ title, items }: any) => ({ title, items }))
+    // );
   }
 
   componentWillUnmount() {
@@ -116,6 +126,7 @@ class App extends React.Component<MyProps, MyState> {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  collections: selectCollectionsForPreview,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({

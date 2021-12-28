@@ -3,8 +3,12 @@ import { selectCollection } from "../../redux/shop/shop.selectors";
 
 import "./collection.styles.scss";
 import CollectionItem from "../../components/collection-item/collection-item.component";
+import { IonLoading } from "@ionic/react";
 
 const CollectionPage = ({ collection }: any) => {
+  // if (!collection) {
+  //   return <IonLoading isOpen={true} message={"Getting Data..."} mode="ios" />;
+  // }
   const { title, items } = collection;
   return (
     <div className="collection-page">
