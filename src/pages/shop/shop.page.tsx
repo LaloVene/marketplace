@@ -15,15 +15,22 @@ import CollectionsOverview from "../../components/collections-overview/collectio
 import CollectionPage from "../collection/collection.page";
 import { IonLoading } from "@ionic/react";
 
+type MyProps = {
+  match?: any;
+  isCollectionFetching?: any;
+  isCollectionsLoaded?: any;
+  fetchCollectionStart?: any;
+};
+
 const ShopPage = ({
   match,
   isCollectionFetching,
   isCollectionsLoaded,
   fetchCollectionStart,
-}: any) => {
+}: MyProps) => {
   useEffect(() => {
     fetchCollectionStart();
-  }, []);
+  }, [fetchCollectionStart]);
 
   return (
     <IonPage>

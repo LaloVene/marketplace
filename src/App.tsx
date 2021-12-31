@@ -17,7 +17,7 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.scss";
 
-import React from "react";
+import { useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
@@ -32,43 +32,40 @@ import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user.selector";
 import { checkUserSession } from "./redux/user/user.actions";
 
-type MyProps = any;
-type MyState = {
+type MyProps = {
   currentUser: any;
+  checkUserSession: any;
 };
 
-class App extends React.Component<MyProps, MyState> {
-  componentDidMount() {
-    const { checkUserSession } = this.props;
+const App = ({ currentUser, checkUserSession }: MyProps) => {
+  useEffect(() => {
     checkUserSession();
-  }
+  }, [checkUserSession]);
 
-  render() {
-    return (
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Switch>
-              <Route exact path="/home" component={HomePage}></Route>
-              <Route exact path="/">
-                <Redirect to="/home" />
-              </Route>
-              <Route path="/shop" component={ShopPage}></Route>
-              <Route exact path="/checkout" component={CheckoutPage}></Route>
-              <Route
-                exact
-                path="/sign-in"
-                render={() =>
-                  this.props.currentUser ? <Redirect to="/" /> : <SignInPage />
-                }
-              />
-            </Switch>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
-    );
-  }
-}
+  return (
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Switch>
+            <Route exact path="/home" component={HomePage}></Route>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
+            <Route path="/shop" component={ShopPage}></Route>
+            <Route exact path="/checkout" component={CheckoutPage}></Route>
+            <Route
+              exact
+              path="/sign-in"
+              render={() =>
+                currentUser ? <Redirect to="/" /> : <SignInPage />
+              }
+            />
+          </Switch>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
