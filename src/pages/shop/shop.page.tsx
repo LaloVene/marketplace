@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 import "./shop.styles.scss";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { fetchCollectionStartAsync } from "../../redux/shop/shop.actions";
+import { fetchCollectionStart } from "../../redux/shop/shop.actions";
 import {
   selectIsCollectionFetching,
   selectIsCollectionsLoaded,
@@ -19,10 +19,10 @@ const ShopPage = ({
   match,
   isCollectionFetching,
   isCollectionsLoaded,
-  fetchCollectionStartAsync,
+  fetchCollectionStart,
 }: any) => {
   useEffect(() => {
-    fetchCollectionStartAsync();
+    fetchCollectionStart();
   }, []);
 
   return (
@@ -60,8 +60,8 @@ const mapStateToProps = createStructuredSelector({
   isCollectionsLoaded: selectIsCollectionsLoaded,
 });
 const mapDispatchToProps = (dispatch: any) => ({
-  fetchCollectionStartAsync: () => {
-    dispatch(fetchCollectionStartAsync());
+  fetchCollectionStart: () => {
+    dispatch(fetchCollectionStart());
   },
 });
 

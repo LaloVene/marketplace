@@ -1,25 +1,3 @@
-import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { IonApp, IonRouterOutlet } from "@ionic/react";
-import { IonReactRouter } from "@ionic/react-router";
-
-import HomePage from "./pages/home-page/home.page";
-import ShopPage from "./pages/shop/shop.page";
-import SignInPage from "./pages/sign-in/sign-in.page";
-import CheckoutPage from "./pages/checkout/checkout.component";
-
-import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
-import { setCurrentUser } from "./redux/user/user.actions";
-import { selectCurrentUser } from "./redux/user/user.selector";
-import { selectCollectionsForPreview } from "./redux/shop/shop.selectors";
-
-import {
-  auth,
-  createUserProfileDocument,
-  addCollectionAndDocuments,
-} from "./firebase/firebase.utils";
-
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -39,62 +17,30 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.scss";
 
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import { IonApp, IonRouterOutlet } from "@ionic/react";
+import { IonReactRouter } from "@ionic/react-router";
+
+import HomePage from "./pages/home-page/home.page";
+import ShopPage from "./pages/shop/shop.page";
+import SignInPage from "./pages/sign-in/sign-in.page";
+import CheckoutPage from "./pages/checkout/checkout.component";
+
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "./redux/user/user.selector";
+import { checkUserSession } from "./redux/user/user.actions";
+
 type MyProps = any;
 type MyState = {
   currentUser: any;
 };
 
 class App extends React.Component<MyProps, MyState> {
-  // constructor(props: any) {
-  //   super(props);
-
-  //   this.state = {
-  //     currentUser: null,
-  //   };
-  // }
-
-  unsubscribeFromAuth: any = null;
-
   componentDidMount() {
-    const { setCurrentUser, collections } = this.props;
-
-    // Check if aith changed
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(
-      async (userAuth: any) => {
-        if (userAuth) {
-          // Check user
-          const userRef = await createUserProfileDocument(userAuth);
-
-          // Save data
-          userRef?.onSnapshot((snapShot) => {
-            // this.setState({
-            //   currentUser: {
-            //     id: snapShot.id,
-            //     ...snapShot.data(),
-            //   }
-            // });
-            setCurrentUser({
-              currentUser: {
-                id: snapShot.id,
-                ...snapShot.data(),
-              },
-            });
-          });
-        } else {
-          // If error display normal data
-          setCurrentUser(userAuth);
-        }
-      }
-    );
-    // Fill collections data
-    // addCollectionAndDocuments(
-    //   "collections",
-    //   collections.map(({ title, items }: any) => ({ title, items }))
-    // );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   render() {
@@ -126,11 +72,10 @@ class App extends React.Component<MyProps, MyState> {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
-  collections: selectCollectionsForPreview,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  setCurrentUser: (user: any) => dispatch(setCurrentUser(user)),
+  checkUserSession: () => dispatch(checkUserSession()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
